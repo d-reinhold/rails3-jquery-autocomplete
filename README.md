@@ -1,5 +1,22 @@
 # rails3-jquery-autocomplete
 
+Changed by Slash4:
+
+'I added multicolumn search (still one model at a time, though), for ActiveRecord, I don't know how to reproduce it for Mongo mapper or Mongoid.
+
+But I think it would be nice to adapt it too, cause its a rather important feature. Plus, its rather backward compatible as you can pass only one column as before, or an array of columns. The routes won't change, and the first column you pass is still the referent for order and select clauses.'
+
+Changed by donv:
+
+'Added option to send additional fields with the auto complete query.'
+
+This feature was incomplete. This branch will combine multicolumn search from Slash4 with the additional fields feature started by donv, which I will hopefully fully implement.
+
+
+
+
+
+
 An easy way to use jQuery's autocomplete with Rails 3.
 
 Supports both ActiveRecord, [mongoid](http://github.com/mongoid/mongoid), and [MongoMapper](https://github.com/jnunemaker/mongomapper).
