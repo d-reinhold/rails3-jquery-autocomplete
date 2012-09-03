@@ -41,18 +41,46 @@ module Rails3JQueryAutocomplete
     # end
     #
     module ClassMethods
+                       #course, [:prof, :name, :department, :school_name, :number, :school_symbol], options={:full => true, :extra_data => [:department, :name, :school_name, :number, :prof, :id, :school_symbol], :display_value => :autocomplete_display, :add_fields => [:school_symbol]}
       def autocomplete(object, method, options = {})
         define_method("autocomplete_#{object}_#{method.first}") do
 
           method = options[:column_name] if options.has_key?(:column_name)
 
           term = params[:term]
+          add_fields = []         
+                    
+          if object == :course
+            add_fields << "PO" if params[:po] == "true"
+            add_fields << "CM" if params[:cm] == "true"
+            add_fields << "HM" if params[:hm] == "true"
+            add_fields << "SC" if params[:sc] == "true" 
+            add_fields << "PZ" if params[:pz] == "true"
+            add_fields << "JS" if params[:js] == "true"          
+            puts add_fields
+          else          
+            puts "-- INSIDE AUTOCOMPLETE --"
+            puts options[:add_fields]
+            add_fields = {}
+            if options[:add_fields]
+              puts "Query Fields"
+              if options[:add_fields].is_a?(Symbol)
+                add_fields[options[:add_fields]] = params[options[:add_fields]] unless params[options[:add_fields]].blank?
+                puts "Field: #{options[:add_fields]} Value: #{add_fields[options[:add_fields]]}"
+              else
+                options[:add_fields].each do |field|
+                  add_fields[field] = params[field]
+                  puts "Field: #{field} Value: #{add_fields[field]}"
+                end
+              end
+            end
+          end
 
           if term && !term.blank?
             #allow specifying fully qualified class name for model object
             class_name = options[:class_name] || object
             items = get_autocomplete_items(:model => get_object(class_name), \
-              :options => options, :term => term, :method => method)
+              :options => options, :term => term, :method => method, :add_fields => add_fields)
           else
             items = {}
           end
